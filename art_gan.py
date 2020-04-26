@@ -73,20 +73,19 @@ def build_generator(noise_size, channels):
         model.add(Conv2D(256, kernel_size=3, padding='same'))
         model.add(BatchNormalization(momentum=0.8))
         model.add(Activation('relu'))
-        model.summary()
-        model.add(Conv2D(channels, kernel_size=3, padding='same'))
-        model.add(Activation('tanh'))
-        input = Input(shape=(noise_size,))
-        generated_image = model(input)
 
-        return Model(input, generated_image)
+    model.summary()
+    model.add(Conv2D(channels, kernel_size=3, padding='same'))
+    model.add(Activation('tanh'))
+
+    input = Input(shape=(noise_size,))
+    generated_image = model(input)
+
+    return Model(input, generated_image)
 
 ### SAVE IMAGES ###
 def save_images(cnt, noise):
-    image_array = np.full((
-        PREVIEW_MARGIN + (PREVIEW_ROWS * (IMAGE_SIZE + PREVIEW_MARGIN)),
-        PREVIEW_MARGIN + (PREVIEW_COLS * (IMAGE_SIZE + PREVIEW_MARGIN)), 3),
-        255, dtype=np.uint8)
+    image_array = np.full((PREVIEW_MARGIN + (PREVIEW_ROWS * (IMAGE_SIZE + PREVIEW_MARGIN)),PREVIEW_MARGIN + (PREVIEW_COLS * (IMAGE_SIZE + PREVIEW_MARGIN)), 3),255, dtype=np.uint8)
 
     generated_images = generator.predict(noise)
     generated_images = 0.5 * generated_images + 0.5
@@ -125,8 +124,8 @@ combined.compile(loss='binary_crossentropy',
 y_real = np.ones((BATCH_SIZE, 1))
 y_fake = np.zeros((BATCH_SIZE, 1))
 fixed_noise = np.random.normal(0, 1, (PREVIEW_ROWS * PREVIEW_COLS, NOISE_SIZE))
-cnt = 1
 
+cnt = 1
 for epoch in range(EPOCHS):
     idx = np.random.randint(0, training_data.shape[0], BATCH_SIZE)
     x_real = training_data[idx]

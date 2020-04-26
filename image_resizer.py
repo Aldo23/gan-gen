@@ -22,15 +22,16 @@ training_data = []
 print('resizing...')
 
 for filename in os.listdir(images_path):
+    path = os.path.join(images_path, filename)
+    image = Image.open(path).resize((IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
     print(filename)
-    if filename != '.DS_Store':
+    print(image)
 
-        path = os.path.join(images_path, filename)
-        image = Image.open(path).resize((IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
+    training_data.append(np.asarray(image))
 
-    training_data = np.reshape(
-        training_data, (-1, IMAGE_SIZE, IMAGE_SIZE, IMAGE_CHANNELS))
-    training_data = training_data / 127.5 - 1
+training_data = np.reshape(
+    training_data, (-1, IMAGE_SIZE, IMAGE_SIZE, IMAGE_CHANNELS))
+training_data = training_data / 127.5 - 1
 
-    print('saving file...')
-    np.save('cubism_data.npy', training_data)
+print('saving file...')
+np.save('cubism_data.npy', training_data)
